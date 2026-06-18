@@ -12,9 +12,8 @@ else
 	wget https://github.com/WatForm/dashplus-alloy-testing/releases/download/corpora-alloy-models/catalyst-corpus.zip
 	echo "Unzipping"
 	unzip catalyst-corpus.zip &> /dev/null
+	echo "Catalyst corpus setup completed."
 fi
-rm -f catalyst-corpus.zip
-echo "Catalyst corpus setup completed."
 
 if [ -d alloy-tools-models ]; then
 	echo "alloy-tools-models exists; nothing to do"
@@ -31,8 +30,8 @@ else
 	# these util files fail AA6.2 because of circular imports
 	# on integer
 	rm -rf alloy-tools-models/utilities/types
+	echo "alloy-tools-models set up completed."
 fi
-echo "alloy-tools-models set up completed."
 
 if [ -d eid-day-expert-models ]; then
 	echo "eid-day-expert-models exists; nothing to do"
@@ -46,11 +45,14 @@ else
 	rm -f eid-day-expert-models.zip
 	cd eid-day-expert-models
 	./setup.sh
+	echo "eid-day-expert-models set up completed."
 	cd ..
 fi
-echo "eid-day-expert-models set up completed."
-
 cd ..
+
+if [ ! -d "libs" ]; then
+	mkdir libs 
+fi
 
 # get AA 6.2
 cd libs
