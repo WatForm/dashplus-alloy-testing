@@ -1,0 +1,83 @@
+
+# =========================
+# OS junk (macOS / Windows)
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+testing-scripts/.java-version
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# virtual environments
+venv/
+.env/
+.venv/
+ENV/
+env/
+
+# packaging / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy / tooling
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# =========================
+# Java
+# =========================
+# compiled class files
+*.class
+
+# build outputs
+bin/
+out/
+target/
+models/*/
+libs/*/
+
+# Maven / Gradle
+.gradle/
+**/build/
+**/target/
+
+# logs
+*.log
+
+# Eclipse / IntelliJ / VS Code
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+# =========================
+# Misc
+# =========================
+*.jar
+*.war
+*.ear
