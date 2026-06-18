@@ -54,7 +54,9 @@ htmlcov/
 bin/
 out/
 target/
-models/*/
+models/catalyst-corpus/
+models/eid-day-expert-models/
+models/alloy-tools-models/
 libs/*/
 
 # Maven / Gradle
