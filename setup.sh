@@ -48,6 +48,10 @@ else
 	echo "eid-day-expert-models set up completed."
 	cd ..
 fi
+echo "removing .als files not supported by dashplus parse/resolve"
+echo "see models/remove-unsupported-dashplus-parse.py for list of these models and why"
+echo 
+python3 remove-unsupported-dashplus-parse.py
 cd ..
 
 if [ ! -d "libs" ]; then

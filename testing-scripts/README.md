@@ -27,6 +27,7 @@
 
 *config.py*
 - sets paths and directories to run tests on
+- flags for verbose, stop_on_first_fail, etc.
 - setup fcn can have an argument for "who" (e.g., nad->Nancy) to setup one person's usual defaults without affecting anyone else and still commit to the repo.
 
 

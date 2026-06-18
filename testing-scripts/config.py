@@ -12,7 +12,11 @@ dp_parse = 'java -cp ".:../libs/*" DPParse'
 dp_parse_resolve = 'java -cp ".:../libs/*" DPParseResolve'
 
 sources = [
-			'../models',
+			# too many models in first two for minor testing
+			#'../models/catalyst-corpus/catalyst-corpus-pass',
+			#'../models/catalyst-corpus/catalyst-corpus-fail'
+			'../models/eid-day-expert-models',
+			'../models/alloy-tools-models',
 			]
 verbose = True
 stop_on_first_fail = True
