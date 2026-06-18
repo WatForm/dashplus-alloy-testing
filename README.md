@@ -18,7 +18,7 @@ to wipe put all downloads and intermediate files
 ./test-results-cleanup.sh 
 to wipe out test results only
 
-# lib/
+# Binaries (lib/)
 
 The setup.sh script wgets/git clones any binaries needed for testing.
 **dashplus is symbolically linked to a sister directory.**
@@ -52,12 +52,12 @@ There are no duplicate .als files within catalyst-corpus or between catalyst-cor
 
 There are script files models/remove-unsupported-X.py, which can be run to remove certains models that are not supported by some part of the process for a documented reason.
 
-## Tests (testing-scripts)
+## Tests (testing-scripts/)
 
 See testing-scripts/README.md
 
 
-## Extra notes (mac)
+## Extra notes (for mac o/s)
 
 * to count files in a directory
 find . -type f -name "*.als" | wc -l

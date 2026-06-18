@@ -83,3 +83,4 @@ libs/*
 *.jar
 *.war
 *.ear
+*.zip
