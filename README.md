@@ -8,7 +8,7 @@
 
 # Requirements
 
-* bash, python3, wget, unzip, git, sed
+* bash, python3, wget, unzip, git, sed, java 17.0.16, java 25
 * **jenv is used to set version of java in directories (currently java 17.0.16 and 25 are required)**
 * dashplus repo is in a **sister directory**
 
