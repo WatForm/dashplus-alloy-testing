@@ -12,7 +12,7 @@
 * **jenv is used to set version of java in directories (currently java 17.0.16 and 25 are required)**
 * dashplus repo is in a **sister directory**
 
-# Setup
+# Setup and Cleanup
 
 ./setup.sh 
 to download models, libs, compile java programs
@@ -23,6 +23,8 @@ to wipe put all downloads and intermediate files
 
 ./test-results-cleanup.sh 
 to wipe out test results only
+
+.gitignore should stop addition of models/ to github repo (the above scripts remove the models)
 
 # Binaries (lib/)
 
