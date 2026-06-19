@@ -2,9 +2,9 @@
 
 # TL;DR
 
-./setup.sh (will download all model sets and do other set up)  
-cd testing-scripts  
-python3 test_aa_dp_parse_resolve.py (will test if dashplus parsing and resolving passes on models in two smaller model-sets that pass parse/resolve of AA6.2)
+`./setup.sh` (will download all model sets and do other set up)  
+`cd testing-scripts`  
+`python3 test_aa_dp_parse_resolve.py` (will test if dashplus parsing and resolving passes on models in two smaller model-sets that pass parse/resolve of AA6.2)
 
 # Requirements
 
