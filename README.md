@@ -31,6 +31,8 @@ The setup.sh script wgets/git clones any binaries needed for testing.
 
 # Model Sets (models/)
 
+After setup, the models directory contains: 
+
 1) ../models/alloy-tools-models 
 * ~100 models from https://github.com/AlloyTools/models
 * util files are removed (on setup) b/c they cause a circular dependency on integer.als in AA6.2 when they are parsed by themselves
