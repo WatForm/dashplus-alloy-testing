@@ -9,8 +9,7 @@
 
 ## Python Testing 
 
-- run as in 
-`python3 test_sat_inside_dashplus.py nad`
+- example test: `python3 test_sat_inside_dashplus.py nad`
 
 *test_X.py*
 - has a function that is run per model_name
