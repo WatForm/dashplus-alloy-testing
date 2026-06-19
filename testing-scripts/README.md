@@ -1,8 +1,8 @@
 # Dashplus Alloy Tests
 
-* all tests are designed to be run from within the `scripts` directory
+* all tests are designed to be run from within the `testing-scripts` directory
 
-* assumes dashplus is a sister directory to dash-testing
+* assumes dashplus is a sister directory to dash-alloy-testing
 
 * this directory holds both helper Java files (e.g., AAParseResolve.java) and python scripts to run test (test_aa_dp_parse.py) and additional helper Java files.
 
