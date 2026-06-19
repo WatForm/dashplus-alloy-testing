@@ -34,22 +34,22 @@
 
 * there are common return error codes used across these files to be compared in python scripts
 
-*AAParseResolve.java* (relies only on AA6.2)
+*AAParseResolve.java* (relies only on AA6.2)  
 	CompModule world =
                 CompUtil.parseEverything_fromFile(null, null, args[0]);
 
-*DPParse.java*
+*DPParse.java*  
 	AlloyFile file = parse(path.toAbsolutePath());
 
-*DPParseResolve.java*
+*DPParseResolve.java*  
  	AlloyModel file = parseToModel(path.toAbsolutePath());
 
-*InstanceChecker.java*
-	modelWorld = CompUtil.parseEverything_fromString(rep, modelString);
-	creates a string that is the model plus XML from .als file
+*InstanceChecker.java*  
+	modelWorld = CompUtil.parseEverything_fromString(rep, modelString);  
+	creates a string that is the model plus XML from .als file  
 	runs that file for SAT
 
-*InstanceGenerator.java*
+*InstanceGenerator.java*  
 	creates X XML files of instances of X instances of a model at default scope Y
 
 
