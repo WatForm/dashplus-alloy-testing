@@ -11,20 +11,20 @@
 
 - example test: `python3 test_sat_inside_dashplus.py nad`
 
-*test_X.py*
+*test_X.py* (create one of these files for every kind of test to run)
 - has a function that is run per model_name
 	- function sets a cmd to run on the model_name and receives its (output, err, return_code, time_take) from run_command(cmd)
 	- decides how to process cmd results and output for pass/fail
 	- returns (x,y) where x is a count of passes and y is a count of fails for this test (usually (1,0) or (0,1))
 - main: controller(function_per_model_name)
 
-*controller.py*
+*controller.py* (unlikely to be edited very often)
 - takes a func_per_model_name argument and walks over entire directory of .als files to run that function on each model
 - records tally of pass/fails
 - currently can run multiple threads but we probably don't want this for any performance testing
 - additionally provides function "run_command" and "common_err_response", "common_pass_response", which can be used in test_X.py
 
-*config.py*
+*config.py* (set parameters for test)
 - sets paths and directories to run tests on
 - flags for verbose, stop_on_first_fail, etc.
 - setup fcn can have an argument for "who" (e.g., nad->Nancy) to setup one person's usual defaults without affecting anyone else and still commit to the repo.
