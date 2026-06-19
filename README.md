@@ -66,14 +66,14 @@ See testing-scripts/README.md
 ## Extra notes (for mac o/s)
 
 * to count files in a directory
-find . -type f -name "*.als" | wc -l
+`find . -type f -name "*.als" | wc -l`
 
 * to interactively choose which duplicates to keep
-jdupes -r -d .
+`jdupes -r -d .`
 
 * to find duplicates
-fdupes -r -d .
+`fdupes -r -d .`
 
 * to create a zip file without dot files and system files
-zip -r archive.zip archive -x "*/.*" -x ".*" -x "__MACOSX/*" -x "*.DS_Store"
+`zip -r archive.zip archive -x "*/.*" -x ".*" -x "__MACOSX/*" -x "*.DS_Store"`
 
