@@ -11,6 +11,14 @@ Desktop.ini
 testing-scripts/.java-version
 
 # =========================
+# TLA+
+# =========================
+*.tla
+*.tlc
+*.cfg
+**/states/**
+
+# =========================
 # Python
 # =========================
 __pycache__/
