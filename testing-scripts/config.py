@@ -48,9 +48,23 @@ def setup(who):
 		timeout = 30000 # ms
 		# set this to 1 if want to see command/output matched up well console output
 		num_threads = 1 
-	#elif who == "someone_else's initials":
-		# someone else can set their own values for the script parameters here
-		# and commit it to the repo w/o clashing with anyone else's settings
+	elif who == "od":
+		print("Oleksandr's settings")
+		# to run subdirectories
+		sources = [
+			#'../models/catalyst-corpus/catalyst-corpus-pass',
+			# 'alloy-tools-models'
+			# all pass parsing
+			#'../models/alloy-tools-models',
+			#'../models/eid-day-expert-models',
+			'../models/od-testing-models'
+			]
+		verbose = False
+		stop_on_first_fail = False
+		timeout = 30000 # ms
+		# set this to 1 if want to see command/output matched up well console output
+		num_threads = 1 
+
 	
 
 
