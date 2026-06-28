@@ -57,6 +57,7 @@ target/
 models/catalyst-corpus/
 models/eid-day-expert-models/
 models/alloy-tools-models/
+models/od-testing-models/
 libs/*
 
 # Maven / Gradle
