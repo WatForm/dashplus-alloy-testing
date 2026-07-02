@@ -1,20 +1,32 @@
 /*
     To use this script:
-    - copy AA jar from dashplus (AA 6.2.0 with extra util files in it)
+    - (may already be done) wget https://repo1.maven.org/maven2/org/alloytools/org.alloytools.alloy.dist/6.2.0/org.alloytools.alloy.dist-6.2.0.jar into sister directory libs
     - jenv local 17.0.16
     - jenv shell 17.0.16
-    - javac -cp ../libs/org.alloytools.alloy.dist-6.2.0.jar InstanceChecker.java
+    - javac -cp ../scoring/org.alloytools.alloy.dist-6.2.0.jar InstanceChecker.java
 
     Run the script with:
-    java -cp .:../libs/org.alloytools.alloy.dist.jar InstanceChecker modelfileName xmlFileName 
+    java -cp .:../scoring/org.alloytools.alloy.dist-6.2.0.jar InstanceChecker modelfileName xmlFileName 
+
+    This script adds to the model:
+        one sig atom1 extends A       for every atom of every top-level sig
+        sig = atom1 + atom2 + atom2   for every sig (top-level, subset sig, subsig)
+        sig<:field = atom1 -> atom2 -> ... + atom3 -> atom3 -> ...   for every field of sig 
+        run {} for X Int              where X is the bitwidth used in the instance
+
+    - Scopes of sigs other than Int are not needed because they are set exactly in the facts
+    - Overloading of fields within the model (because sig<:field is used above) is supported.
+    - Atoms are stored in their unique signature (thus they may be in an extends child and not the parent), 
+    thus to find all atoms in a sig, we have to traverse the sig hierarchy created by the parent ids
+    
+    Unsupported:
+    - A/Ord or Ord/Ord (sigs arising from open statements)
 
     Assumptions:
-    - don't do anything with the builtins; they are in the XML, but don't have atoms in the XML
-    - the top-level sigs have univ as their parent
-    - atoms are stored in signatures at their most immediate level, thus to find all atoms in a sig, we have to traverse the sig hierarchy created by the parent ids
-    - expect the XML to contain a command of the form `Run run$1 for 16`, where 16 is the scope; this script gets the scope from the command in the XML
-    - ignores the upperbound tags in the XML
-    - this method largely ignores that scope in the run cmd b/c no matter what the scope given in the command, if there is a `one sig` it will be given a value.  All the XML atoms are created in with a one sig, which overrides the scope given in the command.
+    - the top-level sigs have univ as their parent  (seems to be true in all instances)
+    - subset sigs ('in') have no parent in the XML (seems to be true in all instances)
+    - ignores the upperbound tags in the XML (from old versions of AA)
+    - seq/Int is never used so its scope doesn't matter (not sure how to check this one)
 */
 
 import java.io.File;
@@ -24,6 +36,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,6 +73,9 @@ public class InstanceChecker {
 
     private static Map<String,SigInfo> idToSigInfo;
 
+    private static String SUBSET = "SUBSET"; // my choice of name
+    private static String UNIV = "univ"; // AA's choice of name
+    
     // turn a name in the XML into one that Alloy will 
     // accept in a model
     private static String alloyName(String name) {
@@ -66,6 +83,10 @@ public class InstanceChecker {
             return name.replace("$","ʃ") ;
         } else if (name.startsWith("this/")) {
             return name.replace("this/","");
+        } else if (name.contains("/")) {
+            System.out.println("Contains name non-'this' qualified name "+ name);
+            System.exit(2);
+            return "";
         } else 
             return name;
     }
@@ -98,7 +119,7 @@ public class InstanceChecker {
 
         if (args.length != 2) {
             System.err.println("FAIL: Args required: modelfileName xmlFileNamem");
-            System.exit(1);
+            System.exit(2);
         }
 
         // check args are fine
@@ -109,14 +130,14 @@ public class InstanceChecker {
         String modelFullFileName = modelPath.toString();
         if (!Files.exists(modelPath)) {
             System.out.println("File does not exist: " + modelFullFileName);
-            System.exit(1);
+            System.exit(2);
         }
 
         Path xmlPath = Path.of(xmlFileName).toAbsolutePath();  
         String xmlFullFileName = xmlPath.toString();
         if (!Files.exists(xmlPath)) {
             System.out.println("File does not exist: " + xmlFullFileName);
-            System.exit(1);
+            System.exit(2);
         }
 
         // read the contents of the input .als model
@@ -125,7 +146,7 @@ public class InstanceChecker {
             modelString = Files.readString(modelPath, StandardCharsets.UTF_8);
         } catch (Exception e) {
             System.out.println("FAIL: Reading "+modelFullFileName +" failed with\n" + e.getMessage());
-            System.exit(1);
+            System.exit(2);
         }
 
         // create the CompModel of the .als file
@@ -135,18 +156,19 @@ public class InstanceChecker {
             modelWorld = CompUtil.parseEverything_fromString(rep, modelString);
         } catch (Exception e) {
             System.out.println("FAIL: Alloy jar failed to parse model with message\n" + e.getMessage());
-            System.exit(1);
+            System.exit(2);
         }
     
         // get the field/sig names used in the model
         // these names include seq/Int, and other builtins
         // as well as this/E, etc.
-        Set<String> modelNames = new HashSet<String>();
+        Set<String> modelSigNames = new HashSet<String>();
+        Set<String> modelFieldNames = new HashSet<String>();
         for (Sig s : modelWorld.getAllReachableSigs()) {
             if (!s.builtin)
-                modelNames.add(alloyName(s.label));
+                modelSigNames.add(alloyName(s.label));
             for (Sig.Field f : s.getFields()) {
-                modelNames.add(alloyName(f.label));
+                modelFieldNames.add(alloyName(f.label) + " of " + alloyName(s.label));
             }   
         }
         
@@ -156,7 +178,8 @@ public class InstanceChecker {
         // rather do the XML parsing ourselves
         Document doc = null;
         
-        Set<String> xmlNames = new HashSet<String>();
+        Set<String> xmlSigNames = new HashSet<String>();
+        Set<String> xmlFieldNames = new HashSet<String>();
         NodeList sigs = null;
         NodeList fields = null;
         String univId = null;  // sigs that have this is parent are top-level sigs
@@ -174,20 +197,23 @@ public class InstanceChecker {
             
             for (int i = 0; i < sigs.getLength(); i++) {
                 Element sig = (Element) sigs.item(i);
-                if (sig.getAttribute("label").equals("univ")) {
+                if (sig.getAttribute("label").equals(UNIV)) {
                         // top-level sigs have univ as parent in XML
                         // so we need to get the id of univ
                         univId = sig.getAttribute("ID");
+                } else if (sig.getAttribute("label").equals("String") && sig.getElementsByTagName("atom").getLength() != 0) {
+                    System.out.println("atoms of sig String are not supported");
+                    System.exit(2);
                 } else if (!sig.hasAttribute("builtin")) {
                     String label = alloyName(sig.getAttribute("label"));
                     // add to the list of all xml names
-                    xmlNames.add(label);
+                    xmlSigNames.add(label);
 
                     String myId = sig.getAttribute("ID");
                     
                     // everything except univ has a parent id
                     String parentId = sig.getAttribute("parentID");
-                    
+                    if (parentId.equals("")) parentId = SUBSET;
                     boolean isAbstract = 
                         sig.hasAttribute("abstract") ? 
                             sig.getAttribute("abstract").equals("yes") : 
@@ -212,10 +238,9 @@ public class InstanceChecker {
             // so we can collect the descendants later
             String idOfParent;
             for (String id: idToSigInfo.keySet()) {
-                if (!idToSigInfo.get(id).parentId.equals(univId)) {
-                        idOfParent = 
-                            idToSigInfo.get(id).parentId;
-                        idToSigInfo.get(idOfParent).addChild(id);
+                if (!idToSigInfo.get(id).parentId.equals(univId) && !idToSigInfo.get(id).parentId.equals(SUBSET)) {
+                    idOfParent = idToSigInfo.get(id).parentId;
+                    idToSigInfo.get(idOfParent).addChild(id);
                 }
             }
 
@@ -228,13 +253,14 @@ public class InstanceChecker {
             for (int i = 0; i < fields.getLength(); i++) {
                 Element field = (Element) fields.item(i);
                 String label = field.getAttribute("label");
-                xmlNames.add(alloyName(label));
+                String parentId = field.getAttribute("parentID");
+                xmlFieldNames.add(alloyName(label)+" of " + idToSigInfo.get(parentId).label);
             }
 
         } catch (Exception e) {
             System.out.println("FAIL: Reading "+xmlFullFileName +" failed with\n" + e.getMessage());
             e.printStackTrace();
-            System.exit(1);
+            System.exit(2);
         }
 
         // check the modelNames subseteq of xmlNames
@@ -242,11 +268,17 @@ public class InstanceChecker {
         // will be caught in the Alloy solving below
         // but if the model contains names not used in the XML, the solver will 
         // provide values for them
-        if (!xmlNames.containsAll(modelNames)) {
-            System.out.println("FAIL: Model has sigs/fields not in XML:");
-            modelNames.removeAll(xmlNames);
-            System.out.println(modelNames);   
-            System.exit(1);
+        if (!xmlSigNames.containsAll(modelSigNames)) {
+            System.out.println("FAIL: Model has sigs not in XML:");
+            modelSigNames.removeAll(xmlSigNames);
+            System.out.println(modelSigNames);   
+            System.exit(2);
+        }
+        if (!xmlFieldNames.containsAll(modelFieldNames)) {
+            System.out.println("FAIL: Model has fields not in XML:");
+            modelFieldNames.removeAll(xmlFieldNames);
+            System.out.println(modelFieldNames);   
+            System.exit(2);
         }
 
         // create a string that is one sigs 
@@ -257,15 +289,15 @@ public class InstanceChecker {
         for (String id:idToSigInfo.keySet()) {
             // no builtins will be in this map
             // produce nothing if it is an abstract sig
-            if (!idToSigInfo.get(id).isAbstract) {
+            if (!idToSigInfo.get(id).isAbstract ) {
                 
                 String sigLabel = idToSigInfo.get(id).label;
                 
                 List<String> atomsUniqueToSig = idToSigInfo.get(id).atoms;
                 
-                // could be none                
+                // could be none 
                 for (String a: atomsUniqueToSig) {
-                    // one sig atom_name extends sig name {}
+                    // one sig atom_name extends immediateParentSig name {}
                     newSigs.append("\none sig "+ a + " extends "+ sigLabel + " {}");
                 }
                 
@@ -286,6 +318,7 @@ public class InstanceChecker {
         // we get this info straight from the XML
         Element field;
         String fieldLabel;
+        String parentId;
         Integer arity;
         NodeList tuples;
         List<String> arrows;
@@ -296,12 +329,12 @@ public class InstanceChecker {
             field = (Element) fields.item(i);
             fieldLabel = field.getAttribute("label");
             arity = getFieldArity(field);
-            
+            parentId = field.getAttribute("parentID");
             tuples = field.getElementsByTagName("tuple");
             arrows = new ArrayList<String>();
             
             if (tuples.getLength() == 0) {
-                arrows.add(String.join(" -> ", java.util.Collections.nCopies(arity, "none")));
+                continue;
             } else {
                 arrows = new ArrayList<String>();
 
@@ -317,8 +350,9 @@ public class InstanceChecker {
                     }
                     arrows.add(String.join(" -> ", arrow));
                 }
+
                 // f_name = a$1 -> b$2 + a$2 -> b$3 + ...
-                newFacts.append("\n    "+alloyName(fieldLabel) +" = ");
+                newFacts.append("\n    "+idToSigInfo.get(parentId).label+"<:"+alloyName(fieldLabel) +" = ");
                 newFacts.append(String.join("\n       + ", arrows));
             }        
         }
@@ -334,34 +368,30 @@ public class InstanceChecker {
         NodeList inst = doc.getElementsByTagName("instance");
         if (inst.getLength() > 1) {
             System.out.println("FAIL: More than one instance in XML\n");
-            System.exit(1);
+            System.exit(2);
         }
         Element x = (Element) inst.item(0);
         // this is hacky but works for our purposes
         // and gets the scope from the XML file
         String cmd = x.getAttribute("command");
-        if (!cmd.startsWith("Run run$1")) {
-            System.out.println("FAIL: Instance should be for a run {} cmd\n");
-            System.exit(1);
-        }
-        //cmd = cmd.replace("Run run$1", "run {}");
-        checkerModel.append("\nrun {} for 0\n");     
-        Integer modelNumCmds = modelWorld.getAllCommands().size();  
-        Integer satCmdNum = modelNumCmds;   // cmds are zero indexed
-
+        String bitwidth = x.getAttribute("bitwidth");
+        
+        checkerModel.append("\nrun {} for "+bitwidth+" Int\n");
         System.out.println(checkerModel.toString());
         A4Solution sol = null;
         try {
             // check if checkerModel is Sat
             // parsing or solve will fail if xml has names that model does not
             CompModule checkerModelWorld = CompUtil.parseEverything_fromString(rep, checkerModel.toString());
+            // the following will be the run cmd that we just added (so an earlier cmd in the model is irrelevant)
+            int satCmdNum = checkerModelWorld.getAllCommands().size() - 1;
             // this is the only place we do solving
             // hopefully it is quick because the instance is specific
             A4Options opt = new A4Options();
             sol = TranslateAlloyToKodkod.execute_command(rep, checkerModelWorld.getAllReachableSigs(), checkerModelWorld.getAllCommands().get(satCmdNum), opt);  
         } catch (Exception e) {
             System.out.println("FAIL: Solving checker model failed with\n" + e.getMessage());
-            System.exit(1);
+            System.exit(2);
         }
         
         if (!sol.satisfiable()) {
