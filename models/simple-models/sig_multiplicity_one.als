@@ -1,0 +1,6 @@
+one sig A
+{
+
+}
+
+run {}
