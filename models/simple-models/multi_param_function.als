@@ -1,7 +1,7 @@
 sig A {}
 sig B {}
 
-pred f[a: A, b: B]
+fun f[a: A, b: B]:A
 {
 	a
 }

@@ -3,7 +3,7 @@ sig A
 
 }
 
-pred f
+pred p
 {
 	some univ
 }

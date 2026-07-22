@@ -3,7 +3,7 @@ sig A
 
 }
 
-fun f
+fun f[]:univ
 {
 	univ
 }
