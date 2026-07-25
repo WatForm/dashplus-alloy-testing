@@ -25,7 +25,7 @@ def test_generate_and_check(model_name):
     cmd2 = f"{config.dashplus} {model_name} -evalFacts -xml={instance_file} -d"
     (output, err, rc_cmd2, time_taken) = run_command(cmd2)
 
-    if rc_cmd2 == SUCCESS and "The facts are satisfied" in output:
+    if rc_cmd2 == SUCCESS and "Satisfied: TRUE" in output:
         if config.verbose:
             print(f"{BLUE}TEST RESULT: PASS, {model_name}{RESET}")
             print(f"Generator: {rc_cmd1} Checker: {rc_cmd2}")
