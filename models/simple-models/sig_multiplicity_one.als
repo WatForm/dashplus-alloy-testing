@@ -1,6 +1,0 @@
-one sig A
-{
-
-}
-
-run {}

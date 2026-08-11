@@ -48,10 +48,11 @@ else
 	echo "eid-day-expert-models set up completed."
 	cd ..
 fi
-echo "removing .als files not supported by dashplus parse/resolve"
-echo "see models/remove-unsupported-dashplus-parse.py for list of these models and why"
+
+echo "removing .als files not supported by dashplus"
+echo "see models/remove-unsupported.py for list of these models and why"
 echo 
-python3 remove-unsupported-dashplus-parse.py
+python3 remove-unsupported.py
 cd ..
 
 if [ ! -d "libs" ]; then
@@ -71,7 +72,7 @@ fi
 # get latest dpalloy jar from a sister directory
 # TODO: add more here is testing other main programs in dashplus repo
 if [[ -f "dpalloy.jar" ]]; then
-	echo "dpalloy.jar exists; nothing to do"
+	echo "symbolic link to dpalloy.jar in sister directory exists; nothing to do"
 	echo
 else 
 	echo "created symbolic link to dpalloy jar in sister directory"

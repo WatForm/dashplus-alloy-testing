@@ -34,10 +34,9 @@ def setup(who):
 		# to run subdirectories
 		sources = [
 			#'../models/catalyst-corpus/catalyst-corpus-pass',
-			# alloy-tools-models
-			# all pass parsing
-			#'../models/alloy-tools-models',
+			'../models/alloy-tools-models',
 			'../models/eid-day-expert-models',
+			'../models/synthetic-toy-models',
 			]
 		verbose = False
 		stop_on_first_fail = True
