@@ -1,4 +1,4 @@
-import static ca.uwaterloo.watform.parser.Parser.*;
+import static ca.uwaterloo.watform.parser.AlloyParser.*;
 import ca.uwaterloo.watform.alloyast.AlloyFile;
 import ca.uwaterloo.watform.utils.Reporter;
 
@@ -16,7 +16,7 @@ public class DPParse {
     public static void main(String[] args) throws Exception {
         try {
         	Path path = Paths.get(args[0]);
-            AlloyFile file = parse(path.toAbsolutePath());
+            AlloyFile file = alloyParse(path.toAbsolutePath().toString());
             System.out.println("DP successfully parsed.");
             System.exit(SUCCESS);
         } catch (Reporter.AbortSignal abortSignal) {

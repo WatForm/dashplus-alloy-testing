@@ -2,7 +2,7 @@
 
 # TL;DR
 
-`./setup.sh` (download all model sets and do other set up)  
+`./setup.sh` (download all model sets and do other set up)  **NOTE: has to be rerun if dashplus tools recompiled in sister directory** 
 `cd testing-scripts`  
 `python3 test_aa_dp_parse_resolve.py` (test if dashplus parsing and resolving passes on models in two smaller model-sets that pass parse/resolve of AA6.2)
 

@@ -68,13 +68,14 @@ else
 	wget https://repo1.maven.org/maven2/org/alloytools/org.alloytools.alloy.dist/6.2.0/org.alloytools.alloy.dist-6.2.0.jar
 fi
 
-# get latest dashplus jar from a sister directory
-if [[ -f "watform-dashplus.jar" ]]; then
-	echo "watform-dashplus.jar exists; nothing to do"
+# get latest dpalloy jar from a sister directory
+# TODO: add more here is testing other main programs in dashplus repo
+if [[ -f "dpalloy.jar" ]]; then
+	echo "dpalloy.jar exists; nothing to do"
 	echo
 else 
-	echo "created symbolic link to dashplus jar in sister directory"
-	ln -s ../../dashplus/app/build/libs/watform-dashplus.jar .
+	echo "created symbolic link to dpalloy jar in sister directory"
+	ln -s ../../dashplus/app/build/libs/dpalloy.jar .
 fi
 cd ..
 

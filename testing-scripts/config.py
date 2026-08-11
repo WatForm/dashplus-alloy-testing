@@ -1,10 +1,6 @@
 # config
 # modify this file with each person's config for the tests
 
-# defaults
-# dashplus is in a sister directory to alloy-testing
-dashplus = "java -ea -jar ../../dashplus/app/build/libs/watform-dashplus.jar "
-
 # table gives output if sat; no output if not sat
 alloy = "java -jar ../libs/org.alloytools.alloy.dist-6.2.0.jar exec -o - -f -t table"
 aa_parse_resolve = 'java -cp ".:../libs/*" AAParseResolve'

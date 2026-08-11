@@ -8,7 +8,7 @@ sig A {
 
 
 run {
-
+	f = none -> none
 	some univ
 	no univ
 
