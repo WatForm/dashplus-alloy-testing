@@ -10,7 +10,7 @@ def test_aa_dp_parse_resolve(model_name):
     cmd1 = f"{config.aa_parse_resolve} {model_name}"
     (output,err, rc_cmd1, time_taken) = run_command(cmd1)
     if rc_cmd1 == SUCCESS or rc_cmd1 == RESOLVE_ERROR:
-        cmd2 = f"{config.dp_parse} {model_name}"
+        cmd2 = f"{config.dp_parse_resolve} {model_name}"
         (output,err, rc_cmd2, time_taken) = run_command(cmd2)
         if rc_cmd1 == rc_cmd2:
             if config.verbose:

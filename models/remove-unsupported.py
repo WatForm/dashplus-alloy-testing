@@ -32,6 +32,7 @@ rmfiles.append(Path("../models/eid-day-expert-models/expert-models/gumxtrzzbkrtw
 rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6uzitot5sdu63o7drnur5-TransForm/tso_transistency_perturbed.als"))
 rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6uzitot5sdu63o7drnur5-TransForm/util/tso_transistency_perturbed_minimality_check.al"))
 rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6uzitot5sdu63o7drnur5-TransForm/util/tso_transistency_perturbed_minimize.als"))
+rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6uzitot5sdu63o7drnur5-TransForm/util/tso_transistency_perturbed_minimality_check.als"))
 
 
 for f in rmfiles:

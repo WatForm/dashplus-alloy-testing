@@ -35,10 +35,10 @@ def setup(who):
 		sources = [
 			#'../models/catalyst-corpus/catalyst-corpus-pass',
 			'../models/alloy-tools-models',
-			#'../models/eid-day-expert-models',
+			'../models/eid-day-expert-models',
 			'../models/synthetic-toy-models/pass',
 			]
-		verbose = False
+		verbose = True
 		stop_on_first_fail = False
 		timeout = 30000 # ms
 		# set this to 1 if want to see command/output matched up well console output
