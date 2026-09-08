@@ -34,6 +34,9 @@ rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6u
 rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6uzitot5sdu63o7drnur5-TransForm/util/tso_transistency_perturbed_minimize.als"))
 rmfiles.append(Path("../models/eid-day-expert-models/expert-models/x7t75qqe5fr6uzitot5sdu63o7drnur5-TransForm/util/tso_transistency_perturbed_minimality_check.als"))
 
+# currently unsupported due to overloading
+rmfiles.append(Path("../models/alloy-tools-models/models/java/javatypes_soundness.als"))
+rmfiles.append(Path("../models/alloy-tools-models/models/firewire/firewire.als"))
 
 for f in rmfiles:
     try:
