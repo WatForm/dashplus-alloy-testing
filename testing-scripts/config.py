@@ -35,8 +35,8 @@ def setup(who):
 		# to run subdirectories
 		sources = [
 			#'../models/catalyst-corpus/catalyst-corpus-pass',
-			'../models/alloy-tools-models',
-			'../models/eid-day-expert-models',
+			#'../models/alloy-tools-models',
+			#'../models/eid-day-expert-models',
 			'../models/synthetic-toy-models/pass',
 			]
 		verbose = True
