@@ -18,8 +18,8 @@ public class DPParseResolve {
     public static void main(String[] args) throws Exception {
         try {
         	Path path = Paths.get(args[0]);
-            AlloyModel file = alloyParseToModel(path.toAbsolutePath().toString());
-            file.resolve();
+            AlloyModel model = alloyParseToModel(path.toAbsolutePath().toString());
+            model.resolve();
             System.out.println("DP successfully parsed and resolved.");
             System.exit(SUCCESS);
         } catch (Reporter.AbortSignal abortSignal) {

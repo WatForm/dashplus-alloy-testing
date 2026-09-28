@@ -55,6 +55,12 @@ echo
 python3 remove-unsupported.py
 cd ..
 
+# compile the latest dpalloy jar from a sister directory
+# TODO: add more here is testing other main programs in dashplus repo
+pushd ../dashplus/
+./gradlew dpalloy
+popd
+
 if [ ! -d "libs" ]; then
 	mkdir libs 
 fi
@@ -68,15 +74,17 @@ else
 	echo "getting AA6.2"
 	wget https://repo1.maven.org/maven2/org/alloytools/org.alloytools.alloy.dist/6.2.0/org.alloytools.alloy.dist-6.2.0.jar
 fi
-
-# get latest dpalloy jar from a sister directory
-# TODO: add more here is testing other main programs in dashplus repo
-if [[ -f "dpalloy.jar" ]]; then
+if [[ -L "dpalloy.jar" ]]; then
 	echo "symbolic link to dpalloy.jar in sister directory exists; nothing to do"
 	echo
 else 
-	echo "created symbolic link to dpalloy jar in sister directory"
-	ln -s ../../dashplus/app/build/libs/dpalloy.jar .
+	if [[ -f "../../dashplus/app/build/libs/dpalloy.jar" ]]; then
+		echo "created symbolic link to dpalloy jar in sister directory"
+		ln -s ../../dashplus/app/build/libs/dpalloy.jar .
+	else
+		echo "dpalloy.jar missing"
+		exit 1
+	fi
 fi
 cd ..
 
@@ -84,14 +92,14 @@ cd ..
 cd testing-scripts
 echo "compiling java helpers"
 jenv local 17.0.16   
-javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceGenerator.java
-javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceChecker.java
+# javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceGenerator.java
+#javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceChecker.java
 javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" AAParseResolve.java
 jenv local 25
 javac -cp "../libs/*" DPParse.java
 javac -cp "../libs/*" DPParseResolve.java
 
-cd ..
+
 
 
 
