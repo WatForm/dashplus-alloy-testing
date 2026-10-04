@@ -4,8 +4,8 @@
 # table gives output if sat; no output if not sat
 alloy = "java -jar ../libs/org.alloytools.alloy.dist-6.2.0.jar exec -o - -f -t table"
 aa_parse_resolve = 'java -cp ".:../libs/*" AAParseResolve'
-dp_parse = 'java -cp ".:../libs/*" DPParse'
-dp_parse_resolve = 'java -cp ".:../libs/*" DPParseResolve'
+dp_parse = 'java -cp ".:../libs/dpalloy.jar" DPParse'
+dp_parse_resolve = 'java -cp ".:../libs/dpalloy.jar" DPParseResolve'
 dp_parse_resolve_solve = 'java -ea -jar ../../dashplus/app/build/libs/dpalloy.jar'
 
 sources = [
