@@ -12,6 +12,10 @@ cd libs
 rm -rf *
 cd ..
 
+cd bin 
+rm -rf *
+cd ..
+
 cd testing-scripts
 rm -rf __pycache__
 rm -rf *.class

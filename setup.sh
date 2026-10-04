@@ -71,6 +71,7 @@ fi
 
 # compile the latest dpalloy jar from a sister directory
 # TODO: add more here is testing other main programs in dashplus repo
+echo ' ** building dpalloy'
 pushd ../../dashplus/
 # on main branch
 ./gradlew dpalloy
@@ -79,9 +80,13 @@ if [[ -L "../dashplus-alloy-testing/libs/dpalloy.jar" ]]; then
 	echo
 else
 	echo "created symbolic link to dpalloy jar in sister directory"
-	ln -s app/build/libs/dpalloy.jar ../dashplus-alloy-testing/libs
+	cd ../dashplus-alloy-testing/libs/
+	# we seem to need to make the symbolic links while in the directory
+	ln -s ../../dashplus/app/build/libs/dpalloy.jar .
+	cd ../../dashplus
 fi
 
+echo ' ** building alloytotla'
 git checkout alloytotla
 ./gradlew alloytotla
 if [[ -L "../dashplus-alloy-testing/libs/alloytotla.jar" ]]; then
@@ -89,18 +94,30 @@ if [[ -L "../dashplus-alloy-testing/libs/alloytotla.jar" ]]; then
 	echo
 else
 	echo "created symbolic link to alloytotla jar in sister directory"
-	ln -s app/build/libs/alloytotla.jar ../dashplus-alloy-testing/libs
+	cd ../dashplus-alloy-testing/libs/
+	ln -s ../../dashplus/app/build/libs/alloytotla.jar .
+	cd ../../dashplus
 fi
 # go back to main branch
-
 git checkout main
 popd
 cd ..
 
+if [ ! -d "bin" ]; then
+	mkdir bin
+fi
+if [[ ! -f bin/apalache-mc ]]; then
+	cd bin
+	echo ' ** get apalache-me'
+	wget https://github.com/apalache-mc/apalache/releases/download/v0.62.3/apalache-0.62.3.zip
+	unzip  apalache-0.62.3.zip
+	mv apalache-0.62.3/bin/apalache-mc .
+	cd ..
+fi
 
 # compile InstanceGenerator.java and InstanceChecker.java
 cd testing-scripts
-echo "compiling java helpers"
+echo " ** compiling java helpers"
 jenv local 17.0.16   
 # javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceGenerator.java
 #javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceChecker.java
