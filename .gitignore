@@ -16,6 +16,7 @@ testing-scripts/.java-version
 *.tla
 *.tlc
 *.cfg
+*.out
 **/states/**
 
 # =========================
