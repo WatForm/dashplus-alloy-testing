@@ -6,6 +6,12 @@
 `cd testing-scripts`  
 `python3 test_aa_dp_parse_resolve.py` (test if dashplus parsing and resolving passes on models in two smaller model-sets that pass parse/resolve of AA6.2)
 
+## Alloy TLA testing
+
+For alloy TLA+ testing, please use a devenv shell using `devenv shell` after installing nix and devenv. All dependencies are pinned to specific hashes, and devenv ensures reproducibility and manages dependencies.
+
+
+
 # Requirements
 
 * bash, python3, wget, unzip, git, sed, java 17.0.16, java 25
