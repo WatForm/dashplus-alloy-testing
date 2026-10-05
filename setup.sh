@@ -87,7 +87,6 @@ else
 fi
 
 echo ' ** building alloytotla'
-git checkout alloytotla
 ./gradlew alloytotla
 if [[ -L "../dashplus-alloy-testing/libs/alloytotla.jar" ]]; then
 	echo "symbolic link to alloytotla.jar in sister directory exists; nothing to do"
@@ -98,8 +97,7 @@ else
 	ln -s ../../dashplus/app/build/libs/alloytotla.jar .
 	cd ../../dashplus
 fi
-# go back to main branch
-git checkout main
+
 popd
 cd ..
 
@@ -125,6 +123,7 @@ javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" AAParseResolve.java
 jenv local 25
 javac -cp "../libs/dpalloy.jar" DPParse.java
 javac -cp "../libs/dpalloy.jar" DPParseResolve.java
+javac -cp "../libs/alloytotla.jar" DPAlloyToTla.java
 
 
 

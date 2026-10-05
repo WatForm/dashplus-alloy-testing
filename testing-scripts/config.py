@@ -7,18 +7,19 @@ aa_parse_resolve = 'java -cp ".:../libs/*" AAParseResolve'
 dp_parse = 'java -cp ".:../libs/dpalloy.jar" DPParse'
 dp_parse_resolve = 'java -cp ".:../libs/dpalloy.jar" DPParseResolve'
 dp_parse_resolve_solve = 'java -ea -jar ../../dashplus/app/build/libs/dpalloy.jar'
+dp_alloytotla = 'java -cp ".:../libs/alloytotla.jar" DPAlloyToTla'
 
 sources = [
 			# too many models in first two for minor testing
 			#'../models/catalyst-corpus/catalyst-corpus-pass',
 			#'../models/catalyst-corpus/catalyst-corpus-fail'
-			'../models/eid-day-expert-models',
+			#'../models/eid-day-expert-models',
 			'../models/alloy-tools-models',
 			]
 verbose = True
-stop_on_first_fail = True
+stop_on_first_fail = False
 timeout = 30000 # ms
-num_threads = 12  # Number of threads to use for running tests concurrently
+num_threads = 1  # Number of threads to use for running tests concurrently
 
 def setup(who):
 	global dashplus
