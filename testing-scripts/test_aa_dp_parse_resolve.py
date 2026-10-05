@@ -23,6 +23,8 @@ def test_aa_dp_parse_resolve(model_name):
             print(cmd2)
             print(f"{RED}TEST RESULT: FAIL{RESET}")
             print(f"{RED}AA: {rc_cmd1} DP: {rc_cmd2}{RESET}")
+            if config.verbose:
+                print(f"{BLUE}{err}{RESET}")
             return (0,1)
     else:
         print(f"{MAGENTA}NOT USABLE: {model_name}{RESET}")

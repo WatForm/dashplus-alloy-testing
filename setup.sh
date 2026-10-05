@@ -55,12 +55,6 @@ echo
 python3 remove-unsupported.py
 cd ..
 
-# compile the latest dpalloy jar from a sister directory
-# TODO: add more here is testing other main programs in dashplus repo
-pushd ../dashplus/
-./gradlew dpalloy
-popd
-
 if [ ! -d "libs" ]; then
 	mkdir libs 
 fi
@@ -74,30 +68,63 @@ else
 	echo "getting AA6.2"
 	wget https://repo1.maven.org/maven2/org/alloytools/org.alloytools.alloy.dist/6.2.0/org.alloytools.alloy.dist-6.2.0.jar
 fi
-if [[ -L "dpalloy.jar" ]]; then
+
+# compile the latest dpalloy jar from a sister directory
+# TODO: add more here is testing other main programs in dashplus repo
+echo ' ** building dpalloy'
+pushd ../../dashplus/
+# on main branch
+./gradlew dpalloy
+if [[ -L "../dashplus-alloy-testing/libs/dpalloy.jar" ]]; then
 	echo "symbolic link to dpalloy.jar in sister directory exists; nothing to do"
 	echo
-else 
-	if [[ -f "../../dashplus/app/build/libs/dpalloy.jar" ]]; then
-		echo "created symbolic link to dpalloy jar in sister directory"
-		ln -s ../../dashplus/app/build/libs/dpalloy.jar .
-	else
-		echo "dpalloy.jar missing"
-		exit 1
-	fi
+else
+	echo "created symbolic link to dpalloy jar in sister directory"
+	cd ../dashplus-alloy-testing/libs/
+	# we seem to need to make the symbolic links while in the directory
+	ln -s ../../dashplus/app/build/libs/dpalloy.jar .
+	cd ../../dashplus
 fi
+
+echo ' ** building alloytotla'
+git checkout alloytotla
+./gradlew alloytotla
+if [[ -L "../dashplus-alloy-testing/libs/alloytotla.jar" ]]; then
+	echo "symbolic link to alloytotla.jar in sister directory exists; nothing to do"
+	echo
+else
+	echo "created symbolic link to alloytotla jar in sister directory"
+	cd ../dashplus-alloy-testing/libs/
+	ln -s ../../dashplus/app/build/libs/alloytotla.jar .
+	cd ../../dashplus
+fi
+# go back to main branch
+git checkout main
+popd
 cd ..
+
+if [ ! -d "bin" ]; then
+	mkdir bin
+fi
+if [[ ! -f bin/apalache-mc ]]; then
+	cd bin
+	echo ' ** get apalache-me'
+	wget https://github.com/apalache-mc/apalache/releases/download/v0.62.3/apalache-0.62.3.zip
+	unzip  apalache-0.62.3.zip
+	mv apalache-0.62.3/bin/apalache-mc .
+	cd ..
+fi
 
 # compile InstanceGenerator.java and InstanceChecker.java
 cd testing-scripts
-echo "compiling java helpers"
+echo " ** compiling java helpers"
 jenv local 17.0.16   
 # javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceGenerator.java
 #javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" InstanceChecker.java
 javac -cp "../libs/org.alloytools.alloy.dist-6.2.0.jar" AAParseResolve.java
 jenv local 25
-javac -cp "../libs/*" DPParse.java
-javac -cp "../libs/*" DPParseResolve.java
+javac -cp "../libs/dpalloy.jar" DPParse.java
+javac -cp "../libs/dpalloy.jar" DPParseResolve.java
 
 
 

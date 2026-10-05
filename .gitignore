@@ -63,6 +63,7 @@ htmlcov/
 # build outputs
 bin/
 out/
+bin/
 target/
 models/catalyst-corpus/
 models/eid-day-expert-models/
