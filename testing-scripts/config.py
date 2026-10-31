@@ -8,6 +8,7 @@ dp_parse = 'java -cp ".:../libs/dpalloy.jar" DPParse'
 dp_parse_resolve = 'java -cp ".:../libs/dpalloy.jar" DPParseResolve'
 dp_parse_resolve_solve = 'java -ea -jar ../../dashplus/app/build/libs/dpalloy.jar'
 dp_alloytotla = 'java -cp ".:../libs/alloytotla.jar" DPAlloyToTla'
+alloy_evaluator = 'java -ea -jar ../../dashplus/app/build/libs/evaluation.jar'
 
 sources = [
 			# too many models in first two for minor testing
@@ -22,6 +23,7 @@ timeout = 30000 # ms
 num_threads = 1  # Number of threads to use for running tests concurrently
 
 def setup(who):
+	global alloy_evaluator
 	global dashplus
 	global alloy
 	global aa_parse_resolve_only
@@ -49,23 +51,16 @@ def setup(who):
 		print("Oleksandr's settings")
 		# to run subdirectories
 		sources = [
-			#'../models/catalyst-corpus/catalyst-corpus-pass',
+			'../models/catalyst-corpus/catalyst-corpus-pass'
 			# 'alloy-tools-models'
 			# all pass parsing
 			#'../models/alloy-tools-models',
 			#'../models/eid-day-expert-models',
-			'../models/od-testing-models'
+			#'../models/od-testing-models'
+			#'../models/synthetic-toy-models/pass'
 			]
 		verbose = False
 		stop_on_first_fail = False
 		timeout = 30000 # ms
 		# set this to 1 if want to see command/output matched up well console output
 		num_threads = 1 
-
-	
-
-
-
-
-
-

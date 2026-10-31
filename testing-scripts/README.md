@@ -9,6 +9,33 @@
 
 ## Python Testing 
 
+Filter a collected JSON report with `aggregation_script.py`. The first argument is
+the input report, the last is a new output filepath, and every filter is an explicit
+`--model PATH VALUE` or `--command PATH VALUE` triple. All filters must match;
+`/` separates nested keys within the selected model or command. The scope is
+determined only by the flag, with no automatic lookup or fallback.
+Missing fields do not match. Models failing model filters are removed. Model-only
+filters retain matching models even when their `commands` list is empty. If any
+command filters are present, models with no surviving commands are removed.
+Metadata and ordering of retained records are preserved.
+
+```sh
+python3 aggregation_script.py out/od-report.json --command dump/status sat --command evaluation/status false out/od-filtered.json
+python3 aggregation_script.py out/od-report.json --command index json:null out/od-defaults.json
+python3 aggregation_script.py out/od-report.json --command evaluation/integers/integer_activity_in_constraints json:true out/od-integer-activity.json
+python3 aggregation_script.py out/od-report.json --model discovery/status unsupported out/od-discovery-unsupported.json
+```
+
+Bare values match strings (`false` matches the status string). Use `json:` for
+typed JSON values such as `json:null`, `json:false`, and `json:4`, or `str:` to
+force a literal string. Missing fields never match null. With no filter triples,
+all commands are preserved. The script prints matched and total model/command
+counts and includes them in a top-level `counts` object in the output report.
+Model-only filters count matching models even if they have no commands; with
+no filters, every model counts as matched. Command filters count a model as matched
+when at least one command survives. Totals refer to the current input report.
+Existing output files are rejected.
+
 - example test: `python3 test_sat_inside_dashplus.py nad`
 
 *test_X.py* (create one of these files for every kind of test to run)
