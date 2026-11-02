@@ -61,7 +61,6 @@ class CollectorTest(unittest.TestCase):
         evidence = integer_observations(events, False)
         self.assertTrue(evidence["overflow_creation_in_constraints"])
         self.assertTrue(evidence["integer_activity_in_constraints"])
-        self.assertIsNone(evidence["integer_creation_in_constraints"])
         self.assertFalse(evidence["counts_complete"])
         self.assertFalse(list(self.directory.glob("timeout.*")))
         time.sleep(0.9)
@@ -92,7 +91,7 @@ class CollectorTest(unittest.TestCase):
         result = collect_model(model, 0, self.directory, self.directory, command, 5)
         default, unsat, check = result["commands"]
         self.assertEqual("true", default["evaluation"]["status"])
-        self.assertFalse(default["evaluation"]["integers"]["integer_creation_in_constraints"])
+        self.assertFalse(default["evaluation"]["integers"]["integer_activity_in_constraints"])
         self.assertEqual("unsat", unsat["dump"]["status"])
         self.assertEqual("skipped", unsat["evaluation"]["status"])
         self.assertEqual("unknown", check["evaluation"]["status"])
@@ -169,7 +168,6 @@ class CollectorTest(unittest.TestCase):
         default, sat, unsat, check, overflow, unknown, overflow_only, unsupported = result["commands"]
         self.assertIsNone(default["index"])
         self.assertEqual("true", default["evaluation"]["status"])
-        self.assertFalse(default["evaluation"]["integers"]["integer_creation_in_constraints"])
         self.assertFalse(default["evaluation"]["integers"]["integer_activity_in_constraints"])
         self.assertEqual("sat", sat["dump"]["status"])
         self.assertEqual("true", sat["evaluation"]["status"])
@@ -183,7 +181,6 @@ class CollectorTest(unittest.TestCase):
         self.assertEqual({"constraints": {"OVERFLOW_UP": 1}}, overflow["evaluation"]["integers"]["overflow_counts_by_phase"])
         self.assertEqual("unknown", unknown["evaluation"]["status"])
         self.assertEqual("unknown", overflow_only["evaluation"]["status"])
-        self.assertFalse(overflow_only["evaluation"]["integers"]["integer_creation_in_constraints"])
         self.assertTrue(overflow_only["evaluation"]["integers"]["overflow_creation_in_constraints"])
         self.assertTrue(overflow_only["evaluation"]["integers"]["integer_activity_in_constraints"])
         self.assertEqual("unsupported", unsupported["evaluation"]["status"])
